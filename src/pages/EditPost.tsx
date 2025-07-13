@@ -11,7 +11,7 @@ import { Badge } from '@/components/ui/badge';
 import MDEditor from '@uiw/react-md-editor';
 import { Upload, X, Save, Eye } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import readingTime from 'reading-time';
+import { calculateReadingTime } from '@/lib/reading-time';
 
 export default function EditPost() {
   const { id } = useParams<{ id: string }>();
@@ -147,7 +147,7 @@ export default function EditPost() {
       }
 
       const slug = generateSlug(title);
-      const stats = readingTime(content);
+      const readTime = calculateReadingTime(content);
       
       const updateData: any = {
         title: title.trim(),
@@ -156,7 +156,7 @@ export default function EditPost() {
         excerpt: excerpt.trim() || null,
         cover_image_url: coverImageUrl || null,
         tags,
-        read_time: Math.ceil(stats.minutes),
+        read_time: readTime,
       };
 
       if (status) {

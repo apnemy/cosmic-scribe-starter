@@ -10,7 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import MDEditor from '@uiw/react-md-editor';
 import { Upload, X, Save, Eye } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import readingTime from 'reading-time';
+import { calculateReadingTime } from '@/lib/reading-time';
 
 export default function CreatePost() {
   const [title, setTitle] = useState('');
@@ -108,7 +108,7 @@ export default function CreatePost() {
       }
 
       const slug = generateSlug(title);
-      const stats = readingTime(content);
+      const readTime = calculateReadingTime(content);
       
       const postData = {
         title: title.trim(),
@@ -119,7 +119,7 @@ export default function CreatePost() {
         tags,
         status,
         author_id: user.id,
-        read_time: Math.ceil(stats.minutes),
+        read_time: readTime,
         ...(status === 'published' && { published_at: new Date().toISOString() }),
       };
 
